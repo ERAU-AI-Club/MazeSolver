@@ -23,6 +23,8 @@ using namespace std;
 #define WEST 3
 //----GLOBAL VARIABLES------------------------------------------------
 char grid[GRID_WIDTH*GRID_HEIGHT];
+bool Entrance = false;
+bool Exit = false;
 
 //----FUNCTION PROTOTYPES---------------------------------------------
 void ResetGrid();
@@ -30,15 +32,19 @@ int XYToIndex(int x, int y);
 int IsInBounds(int x, int y);
 void Visit(int x, int y);
 void PrintGrid();
-void EntranceAndExit();
+
+
+
+
 //----FUNCTIONS-------------------------------------------------------
 int main()
 {
+
+
 	// Starting point and top-level control.
 	srand(time(0)); // seed random number generator.
 	ResetGrid();
 	Visit(1, 1);
-	EntranceAndExit();
 	PrintGrid();
 	return 0;
 }
@@ -66,6 +72,8 @@ int IsInBounds(int x, int y)
 // This is the recursive function we will code in the next project
 void Visit(int x, int y)
 {
+	int chance;
+
 	// Starting at the given index, recursively visits every direction in a
 	// randomized order.
 	// Set my current location to be an empty passage.
@@ -86,6 +94,8 @@ void Visit(int x, int y)
 	// Loop through every direction and attempt to Visit that direction.
 	for (int i = 0; i < 4; ++i)
 	{
+
+
 		// dx,dy are offsets from current location. Set them based
 		// on the next direction I wish to try.
 		int dx = 0, dy = 0;
@@ -106,7 +116,22 @@ void Visit(int x, int y)
 			{
 				// (x2,y2) has not been visited yet... knock down the
 				// wall between my current position and that position
+				chance = (rand() % 40);
+
 				grid[XYToIndex(x2 - dx, y2 - dy)] = ' ';
+
+				if (chance == 14 && Entrance == false)
+				{
+					grid[y * GRID_WIDTH + x] = '2';
+					Entrance = true;
+				}
+
+				if (chance == 16 && Exit == false)
+				{
+					grid[y* GRID_WIDTH + x] = '3';
+					Exit = true;
+				}
+
 				// Recursively Visit (x2,y2)
 				Visit(x2, y2);
 			}
@@ -126,23 +151,3 @@ void PrintGrid()
 	}
 }
 
-void EntranceAndExit()
-{
-	int exit = false;
-	int entrance = false;
-	int randomEnt;
-	int randomExit;
-	int x;
-	int y;
-
-	for (y = 0; y < GRID_HEIGHT; y++)
-	{
-		for (x = 0; x < GRID_WIDTH; x++)
-		{
-			if (grid[XYToIndex(x, y)] == ' ');
-			{
-				grid[y * GRID_WIDTH + x] = 'a';
-			}
-		}
-	}
-}
